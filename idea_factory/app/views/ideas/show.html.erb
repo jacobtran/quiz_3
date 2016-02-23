@@ -1,0 +1,90 @@
+<!-- idea -->
+<div class="container">
+  <h1><%= @idea.title %></h1>
+  <div class="col-sm-9 col-xs-12">
+    <p><%= @idea.body %></p>
+
+    <br><br>
+    <div class="btn-group">
+    <% if can? :edit, @idea %>
+      <%= link_to "Edit", edit_idea_path(@idea), class:"btn btn-default btn-sm" %>
+    <% end %>
+
+    <% if can? :destroy, @idea %>
+      <%#  method: :delete asks Rails to send a DELETE request instead of GET which
+          is accomplished using Javascript/jQuery %>
+      <%= link_to "Delete",
+                  idea_path(@idea),
+                  method: :delete,
+                  data: {confirm: "Are you sure?"},
+                  class:"btn btn-default btn-sm" %>
+    <% end %>
+
+    </div>
+    <hr>
+  </div>
+
+
+  <!-- info box -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <ul class="list-group">
+        <li class="list-group-item">View Count:
+          <span class="badge"><%= @idea.view_count %></span>
+        </li>
+        <li class="list-group-item"><%= @idea.created_at %></li>
+        <li class="list-group-item">Created By: <%= @idea.user_full_name %></li>
+        <li class="list-group-item">Likes: <span class="badge"><%= @idea.likes.count %></span></li>
+        <li class="list-group-item">Members: <span class="badge"><%= @idea.members.count %></span>
+          <br><br>
+          <% @idea.membering_users.each do |member| %>
+            <%= member.first_name + " " + member.last_name %>
+          <% end %>
+          <br>
+        </li>
+        </ul>
+    </div>
+
+
+    <!-- comment -->
+    </div>
+      <div class="container">
+        <%# This is the like object for the `current_user` and `@idea` %>
+        <h2>Comments</h2>
+        <p>Add a Comment</p>
+    <%# we can use the form after overriding the `url` parameter. The downside to it
+        is that it won't work for `edit` situation. This will only work in `create`
+        situation. So we can't reuse it we decide to implement editing comments.%>
+    <%#= form_for @comment, url: idea_comments_path(@idea) do |f| %>
+    <%# end %>
+
+        <%= @comment.errors.full_messages.join(", ") %>
+    <%# passing an array to the `form_for` is a better approach for creating nested
+        resources. This approach will work for both new / edit sitatuions. So if
+        @comment is not persisted it will send a POST request to
+        idea_comments_path(@idea). And if @comment is persisted it will send
+        a PATCH request to idea_comment_path(@idea, @comment) %>
+        <%= form_for [@idea, @comment] do |f| %>
+        <div>
+          <%= f.text_area :body, class:"form-control" %>
+        </div>
+      <%= f.submit "Add Comment", class:"btn btn-default" %>
+    <% end %>
+
+
+    <br><br>
+    <table class="table table-striped">
+    <% @idea.comments.each do |com| %>
+        <tr>
+          <td>
+      <%= com.body %> (by: <%= com.user_full_name %>)
+      <% if can? :destroy, com %>
+        <%= link_to "Delete", idea_comment_path(@idea, com),
+                            method: :delete,
+                            data: {confirm: "Are you sure?"},
+                            class: "btn btn-default btn-sm" %>
+      <% end %>
+          </td>
+        </tr>
+    <% end %>
+      </table>
+  </div>

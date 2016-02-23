@@ -1,0 +1,15 @@
+<p style="color:red">Hello <%= @owner.full_name %>,</p>
+
+<p>You've gotten an comment to your idea:</p>
+
+<p>Idea title: <%= @idea.title %></p>
+<p>The Comment: <%= @comment.body %></p>
+
+<%= link_to "Click Here to View the Idea", idea_url(@idea) %>
+
+<p>Regards,</p>
+
+<p>Awesome Comments Team</p>
+
+<!-- use tables -->
+<!-- use urls instead of paths -->

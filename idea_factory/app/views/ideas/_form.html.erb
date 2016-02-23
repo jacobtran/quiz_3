@@ -1,0 +1,45 @@
+
+<%= @idea.errors.full_messages.join(", ") %>
+<%# form_for takes in an ActiveRecord object as a first arguemnt. Then it looks
+    at the object. If the object is not persisted (not yet saved to the database)
+    The form will automatically use POST for its `method`. It will also automatically
+    use `ideas_path` as its action (convention is that the `ideas_path`
+    will submit to the `create` action)%>
+<%# if @idea is persisted then the form will send PATCH request by adding
+    a hidden field with name _method and value `patch`. The action url will be
+    idea_path(@idea) (by convention). The form will prepopulate the
+    fields with existing values for `@idea` %>
+<%= form_for @idea do |f| %>
+  <%# we call `f` the form object %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title, class:"form-control" %>
+  </div>
+  <div>
+    <%= f.label :body %>
+    <%= f.text_area :body, class:"form-control" %>
+  </div>
+  <div>
+    <%= f.label :image %>
+    <%= f.file_field :image, multiple: true %>
+  </div>
+  <div>
+    <%#= f.label :category_id %>
+    <%#= f.collection_select(:category_id, Category.order(:name), :id, :name, {}, {class:"form-control"}) %>
+  </div>
+  <div>
+    <%#= f.collection_check_boxes(:tag_ids, Tag.order("name"), :id, :name) %>
+  </div>
+  <div>
+  <%#= f.collection_check_boxes(:tag_ids, Tag.order("name"), :id, :name) do |b| %>
+    <%#= b.label do %>
+     <%#= b.check_box + " " + b.text + "..." %>
+    <%# end %>
+  <%# end %>
+  </div>
+  <br>
+  <div>
+    <%= f.submit nil, class:"btn btn-default" %>
+  </div>
+
+<% end %>

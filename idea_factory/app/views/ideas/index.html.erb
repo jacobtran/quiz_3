@@ -1,0 +1,57 @@
+<div class="container">
+  <h1>All Ideas (<%= @ideas.length %>)</h1>
+  <!-- don't do this anymore -->
+  <!-- <img src="/red_panda.jpg" /> -->
+  <!-- start doing this now -->
+  <%#= image_tag "red_panda.jpg" %>
+
+
+  <table class="table table-striped">
+
+    <% @ideas.each do |idea| %>
+
+      <tr>
+        <td>
+          <%#= link_to idea.title, idea_path(idea) %>
+          <h4><%= idea.title %><br></h4>
+          <p><%= idea.body %><br><p>
+          <p>By <%= link_to idea.user_full_name, idea_path(idea) %>
+          <!-- <%= link_to "Join", new_idea_path, class:"btn btn-default" %>
+          <%= link_to "Like", new_idea_path, class:"btn btn-default" %> -->
+          <!-- <% if session[:user_id] == current_user %> -->
+
+
+
+          <!-- <% end %> -->
+        <% if cannot? :edit, idea %>
+          <% member = idea.member_for(current_user) %>
+          <% if member %>
+            <!-- <%= link_to "Joined", new_idea_path, class:"btn btn-default" %> -->
+            <%= link_to "Joined", idea_member_path(idea, member), method: :delete, class: "btn btn-default" %>
+            <!-- <%= link_to fa_icon("heart"), idea_member_path(idea, member), method: :delete, class: "like-member-icon" %> -->
+          <% else %>
+            <!-- <%= link_to "Join", new_idea_path, class:"btn btn-default" %> -->
+            <%= link_to "Join", idea_members_path(idea), method: :post, class: "btn btn-default" %>
+            <!-- <%= link_to fa_icon("heart-o"), idea_members_path(idea), method: :post, class: "like-member-icon" %> -->
+          <% end %>
+
+
+          <% like = idea.like_for(current_user) %>
+          <% if like %>
+            <!-- <%= link_to "Liked", new_idea_path, class:"btn btn-default" %> -->
+            <!-- <%= link_to fa_icon("thumbs-up"), idea_like_path(idea, like), method: :delete, class: "like-member-icon"  %> -->
+            <%= link_to "Liked", idea_like_path(idea, like), method: :delete, class: "btn btn-default"  %>
+          <% else %>
+            <!-- <%= link_to "Like", new_idea_path, class:"btn btn-default" %> -->
+            <!-- <%= link_to fa_icon("thumbs-o-up"), idea_likes_path(idea), method: :post, class: "like-member-icon" %> -->
+            <%= link_to "Like", idea_likes_path(idea), method: :post, class: "btn btn-default" %>
+          <% end %>
+        <% end %>
+
+          <span class="pull-right">Members: <span class="badge"><%= idea.members.count %></span> |
+          Likes: <span class="badge"><%= idea.likes.count %></span></span></p>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
